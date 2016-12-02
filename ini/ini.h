@@ -3,8 +3,8 @@
 //********************************************
 #define _CRT_SECURE_NO_WARNINGS
 
-#ifndef _INI_H_
-#define _INI_H_
+#ifndef __INI_H__
+#define __INI_H__
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(x)    if( (x)!=NULL ) { delete (x); (x)=NULL; }
