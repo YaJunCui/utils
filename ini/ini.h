@@ -1,5 +1,5 @@
 //********************************************
-//    Ini Ïà¹Øº¯Êı
+//    Ini ç›¸å…³å‡½æ•°
 //********************************************
 
 #ifndef _INI_H_
@@ -23,64 +23,64 @@
 
 #define ERROR_DATA -99999999
 
-//ÅäÖÃÎÄ¼şÀà
+//é…ç½®æ–‡ä»¶ç±»
 class CIni
 {
 ////////////////////////////////////////////////
-// ÄÚ²¿Êı¾İ
+// å†…éƒ¨æ•°æ®
 ////////////////////////////////////////////////
 private:
-    char m_strFileName[MAX_PATH];    //ÎÄ¼şÃû
-    long m_lDataLen;                //ÎÄ¼ş³¤¶È
-    char* m_strData;                //ÎÄ¼şÄÚÈİ
+    char m_strFileName[MAX_PATH];    //æ–‡ä»¶å
+    long m_lDataLen;                //æ–‡ä»¶é•¿åº¦
+    char* m_strData;                //æ–‡ä»¶å†…å®¹
 
-    int IndexNum;                    //Ë÷ÒıÊıÄ¿£¨[]µÄÊıÄ¿£©
-    int *IndexList;                    //Ë÷ÒıµãÎ»ÖÃÁĞ±í
-    int Point;                        //µ±Ç°Ö¸Õë
-    int Line, Word;                    //µ±Ç°ĞĞÁĞ
+    int IndexNum;                    //ç´¢å¼•æ•°ç›®ï¼ˆ[]çš„æ•°ç›®ï¼‰
+    int *IndexList;                    //ç´¢å¼•ç‚¹ä½ç½®åˆ—è¡¨
+    int Point;                        //å½“å‰æŒ‡é’ˆ
+    int Line, Word;                    //å½“å‰è¡Œåˆ—
 
 ////////////////////////////////////////////////
-// Í¨ÓÃ½Ó¿Ú
+// é€šç”¨æ¥å£
 ////////////////////////////////////////////////
 public:
     CIni();
-    CIni(char*);                            //³õÊ¼»¯´ò¿ªÅäÖÃÎÄ¼ş
-    virtual ~CIni();                        //ÊÍ·ÅÄÚ´æ
-    char *GetData();                        //·µ»ØÎÄ¼şÄÚÈİ
-    int GetLines(int);                        //·µ»ØÎÄ¼şµÄĞĞÊı
+    CIni(char*);                            //åˆå§‹åŒ–æ‰“å¼€é…ç½®æ–‡ä»¶
+    virtual ~CIni();                        //é‡Šæ”¾å†…å­˜
+    char *GetData();                        //è¿”å›æ–‡ä»¶å†…å®¹
+    int GetLines(int);                        //è¿”å›æ–‡ä»¶çš„è¡Œæ•°
 
-    bool Open(char *);                        //´ò¿ªÅäÖÃÎÄ¼ş
-    void Close();                            //¹Ø±ÕÅäÖÃÎÄ¼ş
-    bool Save(char *filename=NULL);            //±£´æÅäÖÃÎÄ¼ş
+    bool Open(char *);                        //æ‰“å¼€é…ç½®æ–‡ä»¶
+    void Close();                            //å…³é—­é…ç½®æ–‡ä»¶
+    bool Save(char *filename=NULL);            //ä¿å­˜é…ç½®æ–‡ä»¶
 
 ////////////////////////////////////////////////
-// ÄÚ²¿º¯Êı
+// å†…éƒ¨å‡½æ•°
 ////////////////////////////////////////////////
 private:
-    void InitIndex();                        //³õÊ¼»¯Ë÷Òı
-    int FindIndex(char *);                    //·µ»Ø±êÌâÎ»ÖÃ
-    int FindData(int, char *);                //·µ»ØÊı¾İÎ»ÖÃ
-    int GotoNextLine(int);                     //ÌáĞĞ
-    char *ReadDataName(int &);                //ÔÚÖ¸¶¨Î»ÖÃ¶ÁÒ»Êı¾İÃû³Æ
-    char *ReadText(int);                    //ÔÚÖ¸¶¨Î»ÖÃ¶Á×Ö·û´®
+    void InitIndex();                        //åˆå§‹åŒ–ç´¢å¼•
+    int FindIndex(char *);                    //è¿”å›æ ‡é¢˜ä½ç½®
+    int FindData(int, char *);                //è¿”å›æ•°æ®ä½ç½®
+    int GotoNextLine(int);                     //æè¡Œ
+    char *ReadDataName(int &);                //åœ¨æŒ‡å®šä½ç½®è¯»ä¸€æ•°æ®åç§°
+    char *ReadText(int);                    //åœ¨æŒ‡å®šä½ç½®è¯»å­—ç¬¦ä¸²
 
-    bool AddIndex(char *);                    //¼ÓÈëÒ»¸öË÷Òı
-    bool AddData(int, char *, char *);        //ÔÚµ±Ç°Î»ÖÃ¼ÓÈëÒ»¸öÊı¾İ
-    bool ModityData(int, char *, char *);    //ÔÚµ±Ç°Î»ÖÃĞŞ¸ÄÒ»¸öÊı¾İµÄÖµ
-    int GotoLastLine(char *index);            //°ÑÖ¸ÕëÒÆ¶¯µ½±¾INDEXµÄ×îºóÒ»ĞĞ
+    bool AddIndex(char *);                    //åŠ å…¥ä¸€ä¸ªç´¢å¼•
+    bool AddData(int, char *, char *);        //åœ¨å½“å‰ä½ç½®åŠ å…¥ä¸€ä¸ªæ•°æ®
+    bool ModityData(int, char *, char *);    //åœ¨å½“å‰ä½ç½®ä¿®æ”¹ä¸€ä¸ªæ•°æ®çš„å€¼
+    int GotoLastLine(char *index);            //æŠŠæŒ‡é’ˆç§»åŠ¨åˆ°æœ¬INDEXçš„æœ€åä¸€è¡Œ
 
 ////////////////////////////////////////////////
-// ¹«ÓÃ½Ó¿Ú
+// å…¬ç”¨æ¥å£
 ////////////////////////////////////////////////
 public:
-    int ReadInt(char *, char *);            //¶ÁÒ»¸öÕûÊı
-    int ReadInt(char *, int );                //ÔÚÖ¸¶¨µÄĞĞ¶ÁÒ»ÕûÊı
-    char *ReadText(char *, char *);            //¶ÁÒ»¸ö×Ö·û´®
-    char *ReadText(char *, int);            //ÔÚÖ¸¶¨µÄĞĞ¶ÁÒ»×Ö·û´®
-    char *ReadCaption(char *, int);            //ÔÚÖ¸¶¨ĞĞ¶ÁÒ»×Ö·ûÃû³Æ
-    bool Write(char *, char *, int);        //Ğ´Ò»¸öÕûÊı
-    bool Write(char *, char *, char *);        //Ğ´Ò»¸ö×Ö·û´®
-    int GetContinueDataNum(char *);            //·µ»ØÁ¬ĞøµÄĞĞÊı£¨´ÓINDEXµ½µÚÒ»¸ö¿ÕĞĞ£©
+    int ReadInt(char *, char *);            //è¯»ä¸€ä¸ªæ•´æ•°
+    int ReadInt(char *, int );                //åœ¨æŒ‡å®šçš„è¡Œè¯»ä¸€æ•´æ•°
+    char *ReadText(char *, char *);            //è¯»ä¸€ä¸ªå­—ç¬¦ä¸²
+    char *ReadText(char *, int);            //åœ¨æŒ‡å®šçš„è¡Œè¯»ä¸€å­—ç¬¦ä¸²
+    char *ReadCaption(char *, int);            //åœ¨æŒ‡å®šè¡Œè¯»ä¸€å­—ç¬¦åç§°
+    bool Write(char *, char *, int);        //å†™ä¸€ä¸ªæ•´æ•°
+    bool Write(char *, char *, char *);        //å†™ä¸€ä¸ªå­—ç¬¦ä¸²
+    int GetContinueDataNum(char *);            //è¿”å›è¿ç»­çš„è¡Œæ•°ï¼ˆä»INDEXåˆ°ç¬¬ä¸€ä¸ªç©ºè¡Œï¼‰
 };
 
 #endif

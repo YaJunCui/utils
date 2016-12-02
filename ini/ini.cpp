@@ -1,5 +1,5 @@
 //********************************************
-//    Ini Ïà¹Øº¯Êı
+//    Ini ç›¸å…³å‡½æ•°
 //********************************************
 
 #include "stdafx.h"
@@ -12,10 +12,10 @@
 #include "ini.h"
 
 ////////////////////////////////////////////////
-// Í¨ÓÃ½Ó¿Ú
+// é€šç”¨æ¥å£
 ////////////////////////////////////////////////
 
-//³õÊ¼»¯
+//åˆå§‹åŒ–
 CIni::CIni()
 {
     m_lDataLen = 0;
@@ -24,7 +24,7 @@ CIni::CIni()
     IndexList = NULL;
 }
 
-//³õÊ¼»¯
+//åˆå§‹åŒ–
 CIni::CIni(char *filename)
 {
     m_lDataLen=0;
@@ -34,7 +34,7 @@ CIni::CIni(char *filename)
     Open(filename);
 }
 
-//Îö¹¹ÊÍ·Å
+//ææ„é‡Šæ”¾
 CIni::~CIni()
 {
     if( m_lDataLen != 0 )
@@ -50,14 +50,14 @@ CIni::~CIni()
     }
 }
 
-//¶ÁÈëÎÄ¼ş
+//è¯»å…¥æ–‡ä»¶
 bool CIni::Open(char *filename)
 {
     strcpy(m_strFileName, filename);
 
     SAFE_FREE( m_strData );
 
-    //»ñÈ¡ÎÄ¼ş³¤¶È
+    //è·å–æ–‡ä»¶é•¿åº¦
     int fh;
     fh = _open( filename, _O_RDONLY );
     if( fh== -1 )
@@ -67,7 +67,7 @@ bool CIni::Open(char *filename)
     m_lDataLen = _filelength(fh);
     _close(fh);
     
-    //ÎÄ¼ş´æÔÚ
+    //æ–‡ä»¶å­˜åœ¨
     if( m_lDataLen > 0 )
     {
         m_strData = new char[m_lDataLen];
@@ -75,16 +75,16 @@ bool CIni::Open(char *filename)
         FILE *fp;
         fp=fopen(filename, "rb");
         assert( fp!=NULL );
-        fread(m_strData, m_lDataLen, 1, fp);        //¶ÁÊı¾İ
+        fread(m_strData, m_lDataLen, 1, fp);        //è¯»æ•°æ®
         fclose(fp);
 
-        //³õÊ¼»¯Ë÷Òı
+        //åˆå§‹åŒ–ç´¢å¼•
         InitIndex();
         return true;
     }
-    else    // ÎÄ¼ş²»´æÔÚ
+    else    // æ–‡ä»¶ä¸å­˜åœ¨
     {
-        // ÕÒ²»µ½ÎÄ¼ş
+        // æ‰¾ä¸åˆ°æ–‡ä»¶
         m_lDataLen=1;
         m_strData = new char[m_lDataLen];
         memset(m_strData, 0, 1);
@@ -94,7 +94,7 @@ bool CIni::Open(char *filename)
     return false;
 }
 
-//¹Ø±ÕÎÄ¼ş
+//å…³é—­æ–‡ä»¶
 void CIni::Close()
 {
     if( m_lDataLen != 0 )
@@ -110,7 +110,7 @@ void CIni::Close()
     }
 }
 
-//Ğ´ÈëÎÄ¼ş
+//å†™å…¥æ–‡ä»¶
 bool CIni::Save(char *filename)
 {
     if( filename==NULL )
@@ -128,13 +128,13 @@ bool CIni::Save(char *filename)
     return true;
 }
 
-//·µ»ØÎÄ¼şÄÚÈİ
+//è¿”å›æ–‡ä»¶å†…å®¹
 char *CIni::GetData()
 {
     return m_strData;
 }
 
-//»ñµÃÎÄ¼şµÄĞĞÊı
+//è·å¾—æ–‡ä»¶çš„è¡Œæ•°
 int CIni::GetLines(int cur)
 {
     int n=1;
@@ -147,24 +147,24 @@ int CIni::GetLines(int cur)
 }
 
 ////////////////////////////////////////////////
-// ÄÚ²¿º¯Êı
+// å†…éƒ¨å‡½æ•°
 ////////////////////////////////////////////////
 
-//¼ÆËã³öËùÓĞµÄË÷ÒıÎ»ÖÃ
+//è®¡ç®—å‡ºæ‰€æœ‰çš„ç´¢å¼•ä½ç½®
 void CIni::InitIndex()
 {
     IndexNum=0;
     int i = 0;
     for(i=0; i<m_lDataLen; i++)
     {
-        //ÕÒµ½
+        //æ‰¾åˆ°
         if( m_strData[i]=='[' && ( m_strData[i-1]=='\n' || i==0 ) )
         {
             IndexNum++;
         }
     }
 
-    //ÉêÇëÄÚ´æ
+    //ç”³è¯·å†…å­˜
     SAFE_DELETE( IndexList );
     if( IndexNum>0 )
         IndexList=new int[IndexNum];
@@ -181,7 +181,7 @@ void CIni::InitIndex()
     }
 }
 
-//·µ»ØÖ¸¶¨±êÌâÎ»ÖÃ
+//è¿”å›æŒ‡å®šæ ‡é¢˜ä½ç½®
 int CIni::FindIndex(char *string)
 {
     for(int i=0; i<IndexNum; i++)
@@ -197,10 +197,10 @@ int CIni::FindIndex(char *string)
     return -1;
 }
 
-//·µ»ØÖ¸¶¨Êı¾İµÄÎ»ÖÃ
+//è¿”å›æŒ‡å®šæ•°æ®çš„ä½ç½®
 int CIni::FindData(int index, char *string)
 {
-    int p=index;    //Ö¸Õë
+    int p=index;    //æŒ‡é’ˆ
 
     while(1)
     {
@@ -218,7 +218,7 @@ int CIni::FindData(int index, char *string)
     return -1;
 }
 
-//ÌáĞĞ
+//æè¡Œ
 int CIni::GotoNextLine(int p)
 {
     int i = 0;
@@ -230,7 +230,7 @@ int CIni::GotoNextLine(int p)
     return i;
 }
 
-//ÔÚÖ¸¶¨Î»ÖÃ¶ÁÒ»Êı¾İÃû³Æ
+//åœ¨æŒ‡å®šä½ç½®è¯»ä¸€æ•°æ®åç§°
 char *CIni::ReadDataName(int &p)
 {
     char chr;
@@ -244,14 +244,14 @@ char *CIni::ReadDataName(int &p)
     {
         chr = m_strData[i];
 
-        //½áÊø
+        //ç»“æŸ
         if( chr == '\r' )
         {
             p=i+1;
             return Ret;
         }
         
-        //½áÊø
+        //ç»“æŸ
         if( chr == '=' || chr == ';' )
         {
             p=i+1;
@@ -264,7 +264,7 @@ char *CIni::ReadDataName(int &p)
     return Ret;
 }
 
-//ÔÚÖ¸¶¨Î»ÖÃ¶ÁÒ»×Ö·û´®
+//åœ¨æŒ‡å®šä½ç½®è¯»ä¸€å­—ç¬¦ä¸²
 char *CIni::ReadText(int p)
 {
     char chr;
@@ -279,7 +279,7 @@ char *CIni::ReadText(int p)
     {
         chr = m_strData[n];
 
-        //½áÊø
+        //ç»“æŸ
         if( chr == ';' || chr == '\r' || chr == '\t' || chr == ']' )
         {
             //ShowMessage(Ret);
@@ -294,17 +294,17 @@ char *CIni::ReadText(int p)
     return Ret;
 }
 
-//¼ÓÈëÒ»¸öË÷Òı
+//åŠ å…¥ä¸€ä¸ªç´¢å¼•
 bool CIni::AddIndex(char *index)
 {
     char str[256];
     memset(str, 0, 256);
     int n=FindIndex(index);
 
-    if( n == -1 )    //ĞÂ½¨Ë÷Òı
+    if( n == -1 )    //æ–°å»ºç´¢å¼•
     {
         sprintf(str,"\r\n[%s]\r\n",index);
-        m_strData = (char *)realloc(m_strData, m_lDataLen+strlen(str));    //ÖØĞÂ·ÖÅäÄÚ´æ
+        m_strData = (char *)realloc(m_strData, m_lDataLen+strlen(str));    //é‡æ–°åˆ†é…å†…å­˜
         sprintf(&m_strData[m_lDataLen], "%s", str);
         m_lDataLen+=strlen(str);
 
@@ -312,10 +312,10 @@ bool CIni::AddIndex(char *index)
         return true;
     }
     
-    return false;    //ÒÑ¾­´æÔÚ
+    return false;    //å·²ç»å­˜åœ¨
 }
 
-//ÔÚµ±Ç°Î»ÖÃ¼ÓÈëÒ»¸öÊı¾İ
+//åœ¨å½“å‰ä½ç½®åŠ å…¥ä¸€ä¸ªæ•°æ®
 bool CIni::AddData(int p, char *name, char *string)
 {
     char *str;
@@ -325,12 +325,12 @@ bool CIni::AddData(int p, char *name, char *string)
     sprintf(str,"%s=%s\r\n",name,string);
     len=strlen(str);
 
-    p=GotoNextLine(p);    //ÌáĞĞ
-    m_strData = (char *)realloc(m_strData, m_lDataLen+len);    //ÖØĞÂ·ÖÅäÄÚ´æ
+    p=GotoNextLine(p);    //æè¡Œ
+    m_strData = (char *)realloc(m_strData, m_lDataLen+len);    //é‡æ–°åˆ†é…å†…å­˜
 
     char *temp=new char[m_lDataLen-p];
     memcpy(temp, &m_strData[p], m_lDataLen-p);
-    memcpy(&m_strData[p+len], temp, m_lDataLen-p);    //°ÑºóÃæµÄ°áµ½Ä©Î²
+    memcpy(&m_strData[p+len], temp, m_lDataLen-p);    //æŠŠåé¢çš„æ¬åˆ°æœ«å°¾
     memcpy(&m_strData[p], str, len);
     m_lDataLen+=len;
 
@@ -339,7 +339,7 @@ bool CIni::AddData(int p, char *name, char *string)
     return true;
 }
 
-//ÔÚµ±Ç°Î»ÖÃĞŞ¸ÄÒ»¸öÊı¾İµÄÖµ
+//åœ¨å½“å‰ä½ç½®ä¿®æ”¹ä¸€ä¸ªæ•°æ®çš„å€¼
 bool CIni::ModityData(int p, char *name, char *string)
 {
     int n=FindData(p, name);
@@ -351,11 +351,11 @@ bool CIni::ModityData(int p, char *name, char *string)
     int newlen=strlen(string);
     int oldlen=p-n;
 
-    m_strData = (char *)realloc(m_strData, m_lDataLen+newlen-oldlen);    //ÖØĞÂ·ÖÅäÄÚ´æ
+    m_strData = (char *)realloc(m_strData, m_lDataLen+newlen-oldlen);    //é‡æ–°åˆ†é…å†…å­˜
 
     char *temp=new char[m_lDataLen-p];
     memcpy(temp, &m_strData[p], m_lDataLen-p);
-    memcpy(&m_strData[n+newlen], temp, m_lDataLen-p);            //°ÑºóÃæµÄ°áµ½Ä©Î²
+    memcpy(&m_strData[n+newlen], temp, m_lDataLen-p);            //æŠŠåé¢çš„æ¬åˆ°æœ«å°¾
     memcpy(&m_strData[n], string, newlen);
     m_lDataLen+=newlen-oldlen;
 
@@ -363,7 +363,7 @@ bool CIni::ModityData(int p, char *name, char *string)
     return true;
 }
 
-//°ÑÖ¸ÕëÒÆ¶¯µ½±¾INDEXµÄ×îºóÒ»ĞĞ
+//æŠŠæŒ‡é’ˆç§»åŠ¨åˆ°æœ¬INDEXçš„æœ€åä¸€è¡Œ
 int CIni::GotoLastLine(char *index)
 {
     int n=FindIndex(index);
@@ -383,10 +383,10 @@ int CIni::GotoLastLine(char *index)
 }
 
 /////////////////////////////////////////////////////////////////////
-// ¶ÔÍâ½Ó¿Ú
+// å¯¹å¤–æ¥å£
 /////////////////////////////////////////////////////////////////////
 
-//ÒÔÆÕÍ¨·½Ê½¶ÁÒ»×Ö·û´®Êı¾İ
+//ä»¥æ™®é€šæ–¹å¼è¯»ä¸€å­—ç¬¦ä¸²æ•°æ®
 char *CIni::ReadText(char *index, char *name)
 {
     int n=FindIndex(index);
@@ -398,13 +398,13 @@ char *CIni::ReadText(char *index, char *name)
     return ReadText(m);
 }
     
-//ÔÚÖ¸¶¨µÄĞĞ¶ÁÒ»×Ö·û´®
+//åœ¨æŒ‡å®šçš„è¡Œè¯»ä¸€å­—ç¬¦ä¸²
 char *CIni::ReadText(char *index, int lines)
 {
     int n=FindIndex(index);
     assert( n != -1 );
 
-    //Ìøµ½Ö¸¶¨ĞĞÊı
+    //è·³åˆ°æŒ‡å®šè¡Œæ•°
     n=GotoNextLine(n);
     for(int i=0; i<lines; i++)
     {
@@ -412,7 +412,7 @@ char *CIni::ReadText(char *index, int lines)
             n=GotoNextLine(n);
     }
 
-    //¶ÁÊı¾İ
+    //è¯»æ•°æ®
     while( n<=m_lDataLen )
     {
         if( m_strData[n] == '=' )
@@ -430,7 +430,7 @@ char *CIni::ReadText(char *index, int lines)
     return "";
 }
 
-//ÒÔÆÕÍ¨·½Ê½¶ÁÒ»ÕûÊı
+//ä»¥æ™®é€šæ–¹å¼è¯»ä¸€æ•´æ•°
 int CIni::ReadInt(char *index, char *name)
 {
     int n=FindIndex(index);
@@ -445,13 +445,13 @@ int CIni::ReadInt(char *index, char *name)
     return ret;
 }
 
-//ÔÚÖ¸¶¨µÄĞĞ¶ÁÒ»ÕûÊı
+//åœ¨æŒ‡å®šçš„è¡Œè¯»ä¸€æ•´æ•°
 int CIni::ReadInt(char *index, int lines)
 {
     int n=FindIndex(index);
     assert( n != -1 );
 
-    //Ìøµ½Ö¸¶¨ĞĞÊı
+    //è·³åˆ°æŒ‡å®šè¡Œæ•°
     n=GotoNextLine(n);
     for(int i=0; i<lines; i++)
     {
@@ -459,7 +459,7 @@ int CIni::ReadInt(char *index, int lines)
             n=GotoNextLine(n);
     }
 
-    //¶ÁÊı¾İ
+    //è¯»æ•°æ®
     while( n<m_lDataLen )
     {
         if( m_strData[n] == '=' )
@@ -480,13 +480,13 @@ int CIni::ReadInt(char *index, int lines)
     return ERROR_DATA;
 }
 
-//ÔÚÖ¸¶¨µÄĞĞ¶ÁÒ»Êı¾İÃû³Æ
+//åœ¨æŒ‡å®šçš„è¡Œè¯»ä¸€æ•°æ®åç§°
 char *CIni::ReadCaption(char *index, int lines)
 {
     int n=FindIndex(index);
     assert( n != -1 );
 
-    //Ìøµ½Ö¸¶¨ĞĞÊı
+    //è·³åˆ°æŒ‡å®šè¡Œæ•°
     n=GotoNextLine(n);
     for(int i=0; i<lines; i++)
     {
@@ -497,66 +497,66 @@ char *CIni::ReadCaption(char *index, int lines)
     return ReadDataName(n);
 }
 
-//ÒÔÆÕÍ¨·½Ê½Ğ´Ò»×Ö·û´®Êı¾İ
+//ä»¥æ™®é€šæ–¹å¼å†™ä¸€å­—ç¬¦ä¸²æ•°æ®
 bool CIni::Write(char *index, char *name, char *string)
 {
     int n=FindIndex(index);
-    if( n == -1 )    //ĞÂ½¨Ë÷Òı
+    if( n == -1 )    //æ–°å»ºç´¢å¼•
     {
         AddIndex(index);
         n=FindIndex(index);
         n=GotoLastLine(index);
-        AddData(n, name, string);    //ÔÚµ±Ç°Î»ÖÃn¼ÓÒ»¸öÊı¾İ
+        AddData(n, name, string);    //åœ¨å½“å‰ä½ç½®nåŠ ä¸€ä¸ªæ•°æ®
         return true;
     }
 
-    //´æÔÚË÷Òı
+    //å­˜åœ¨ç´¢å¼•
     int m=FindData(n, name);
-    if( m==-1 )        //ĞÂ½¨Êı¾İ
+    if( m==-1 )        //æ–°å»ºæ•°æ®
     {
         n=GotoLastLine(index);
-        AddData(n, name, string);    //ÔÚµ±Ç°Î»ÖÃn¼ÓÒ»¸öÊı¾İ
+        AddData(n, name, string);    //åœ¨å½“å‰ä½ç½®nåŠ ä¸€ä¸ªæ•°æ®
         return true;
     }
 
-    //´æÔÚÊı¾İ
-    ModityData(n, name, string);    //ĞŞ¸ÄÒ»¸öÊı¾İ
+    //å­˜åœ¨æ•°æ®
+    ModityData(n, name, string);    //ä¿®æ”¹ä¸€ä¸ªæ•°æ®
 
     return true;
 }
 
-//ÒÔÆÕÍ¨·½Ê½Ğ´Ò»ÕûÊı
+//ä»¥æ™®é€šæ–¹å¼å†™ä¸€æ•´æ•°
 bool CIni::Write(char *index, char *name, int num)
 {
     char string[32];
     sprintf(string, "%d", num);
 
     int n=FindIndex(index);
-    if( n == -1 )    //ĞÂ½¨Ë÷Òı
+    if( n == -1 )    //æ–°å»ºç´¢å¼•
     {
         AddIndex(index);
         n=FindIndex(index);
         n=GotoLastLine(index);
-        AddData(n, name, string);    //ÔÚµ±Ç°Î»ÖÃn¼ÓÒ»¸öÊı¾İ
+        AddData(n, name, string);    //åœ¨å½“å‰ä½ç½®nåŠ ä¸€ä¸ªæ•°æ®
         return true;
     }
 
-    //´æÔÚË÷Òı
+    //å­˜åœ¨ç´¢å¼•
     int m=FindData(n, name);
-    if( m==-1 )        //ĞÂ½¨Êı¾İ
+    if( m==-1 )        //æ–°å»ºæ•°æ®
     {
         n=GotoLastLine(index);
-        AddData(n, name, string);    //ÔÚµ±Ç°Î»ÖÃn¼ÓÒ»¸öÊı¾İ
+        AddData(n, name, string);    //åœ¨å½“å‰ä½ç½®nåŠ ä¸€ä¸ªæ•°æ®
         return true;
     }
 
-    //´æÔÚÊı¾İ
-    ModityData(n, name, string);    //ĞŞ¸ÄÒ»¸öÊı¾İ
+    //å­˜åœ¨æ•°æ®
+    ModityData(n, name, string);    //ä¿®æ”¹ä¸€ä¸ªæ•°æ®
 
     return true;
 }
 
-//·µ»ØÁ¬ĞøµÄĞĞÊı
+//è¿”å›è¿ç»­çš„è¡Œæ•°
 int CIni::GetContinueDataNum(char *index)
 {
     int num=0;
