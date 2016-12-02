@@ -2,9 +2,9 @@
 //    Ini 相关函数
 //********************************************
 
-//#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <malloc.h>
 #include <io.h>
 #include <fcntl.h>
