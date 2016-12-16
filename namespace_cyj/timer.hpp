@@ -3,8 +3,8 @@
 // description: 实现了简单的计时器
 //
 
-#ifndef __TIMER_HPP__
-#define __TIMER_HPP__
+#ifndef __CYJ_TIMER_HPP__
+#define __CYJ_TIMER_HPP__
 #include <chrono>
 
 namespace cyj
@@ -58,4 +58,4 @@ private:
 
 } //namespace cyj
 
-#endif  //__TIMER_HPP__
+#endif  //__CYJ_TIMER_HPP__

@@ -4,8 +4,8 @@
 // class noncopyable cannot be copied.
 // use a C++11 compiler
 
-#ifndef __NONCOPYABLE_HPP__
-#define __NONCOPYABLE_HPP__
+#ifndef __CYJ_NONCOPYABLE_HPP__
+#define __CYJ_NONCOPYABLE_HPP__
 
 namespace cyj
 {
@@ -21,4 +21,4 @@ protected:
 
 }  // namespace cyj
 
-#endif  // __NONCOPYABLE_HPP__
+#endif  // __CYJ_NONCOPYABLE_HPP__
