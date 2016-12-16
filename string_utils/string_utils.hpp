@@ -1,3 +1,7 @@
+//
+// Description :string_utils,c++字符串的常见操作的打包，分割，查找，删除，读文件，写文件等
+//
+
 #include <string>
 #include <sstream>
 #include <fstream>
