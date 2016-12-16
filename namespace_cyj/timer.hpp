@@ -1,4 +1,4 @@
-//
+﻿//
 // file:        timer.hpp
 // description: 实现了简单的计时器
 //
@@ -34,7 +34,7 @@ public:
 
     int64_t elapsed_nano() const                //纳秒
     {
-        return std::chrono::duration_cast<std::chrono::nanoseconds >(std::chrono::high_resolution_clock::now() - m_begin).count();
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - m_begin).count();
     }
 
     int64_t elapsed_seconds() const             //秒

@@ -15,10 +15,10 @@ class noncopyable
 protected:
   noncopyable() = default;
   ~noncopyable() = default;
-  noncopyable( const noncopyable& ) = delete;
-  noncopyable& operator=( const noncopyable& ) = delete;
+  noncopyable(const noncopyable &) = delete;
+  noncopyable &operator=(const noncopyable &) = delete;
 };
 
-}  // namespace cyj
+} // namespace cyj
 
-#endif  // __CYJ_NONCOPYABLE_HPP__
+#endif // __CYJ_NONCOPYABLE_HPP__
