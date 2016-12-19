@@ -27,12 +27,8 @@ All rights reserved.
 */
 
 /////////////////////////////////  Includes  //////////////////////////////////
-//#include "stdafx.h"                   //Edit by cyj 2016-12-19
+#include "stdafx.h"                     //Edit by cyj 2016-12-19
 #include "ping.h"
-
-#ifndef CPING_USE_ICMP //自定义CPING_USE_ICMP Edit by cyj 2016-12-19
-#define CPING_USE_ICMP
-#endif
 
 /////////////////////////////////  Definitions ////////////////////////////////
 
