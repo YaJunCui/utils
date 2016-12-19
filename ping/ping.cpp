@@ -26,13 +26,12 @@ All rights reserved.
 
 */
 
-
 /////////////////////////////////  Includes  //////////////////////////////////
 //#include "stdafx.h"                   //Edit by cyj 2016-12-19
 #include "ping.h"
 
-#ifndef CPING_USE_ICMP                  //自定义CPING_USE_ICMP Edit by cyj 2016-12-19
-#define CPING_USE_ICMP            
+#ifndef CPING_USE_ICMP //自定义CPING_USE_ICMP Edit by cyj 2016-12-19
+#define CPING_USE_ICMP
 #endif
 
 /////////////////////////////////  Definitions ////////////////////////////////
@@ -47,24 +46,24 @@ All rights reserved.
 #endif
 
 // IP header
-typedef struct tagIP_HEADER 
+typedef struct tagIP_HEADER
 {
-    unsigned int h_len:4;          // length of the header
-    unsigned int version:4;        // Version of IP
+    unsigned int h_len : 4;        // length of the header
+    unsigned int version : 4;      // Version of IP
     unsigned char tos;             // Type of service
     unsigned short total_len;      // total length of the packet
     unsigned short ident;          // unique identifier
     unsigned short frag_and_flags; // flags
-    unsigned char  ttl; 
-    unsigned char proto;           // protocol (TCP, UDP etc)
-    unsigned short checksum;       // IP checksum
+    unsigned char ttl;
+    unsigned char proto;     // protocol (TCP, UDP etc)
+    unsigned short checksum; // IP checksum
     unsigned int sourceIP;
     unsigned int destIP;
 } IP_HEADER;
-typedef IP_HEADER FAR* LPIP_HEADER;
+typedef IP_HEADER FAR *LPIP_HEADER;
 
 // ICMP header
-typedef struct tagICMP_HEADER 
+typedef struct tagICMP_HEADER
 {
     BYTE i_type;
     BYTE i_code; /* type sub code */
@@ -74,11 +73,11 @@ typedef struct tagICMP_HEADER
     /* This is not the std header, but we reserve space for time */
     ULONG timestamp;
 } ICMP_HEADER;
-typedef ICMP_HEADER FAR* LPICMP_HEADER;
+typedef ICMP_HEADER FAR *LPICMP_HEADER;
 
 void FillIcmpData(LPICMP_HEADER pIcmp, int nData);
-BOOL DecodeResponse(char* pBuf, int nBytes, sockaddr_in* from);
-USHORT GenerateIPChecksum(USHORT* pBuffer, int nSize);
+BOOL DecodeResponse(char *pBuf, int nBytes, sockaddr_in *from);
+USHORT GenerateIPChecksum(USHORT *pBuffer, int nSize);
 
 #endif //CPING_USE_WINSOCK2
 
@@ -93,7 +92,7 @@ static char THIS_FILE[] = __FILE__;
 #ifdef CPING_USE_WINSOCK2
 BOOL CPing::sm_bWinsock2OK = FALSE;
 BOOL CPing::sm_bAttemptedWinsock2Initialise = FALSE;
-#endif 
+#endif
 
 #ifdef CPING_USE_ICMP
 BOOL CPing::sm_bAttemptedIcmpInitialise = FALSE;
@@ -104,15 +103,15 @@ lpIcmpCloseHandle CPing::sm_pIcmpCloseHandle = NULL;
 
 __int64 CPing::sm_TimerFrequency = 0;
 
-
 //Internal class which is used to ensure that the ICMP
-//handle and winsock stack is closed upon exit 
+//handle and winsock stack is closed upon exit
 class _CPING
 {
-public:
+  public:
     _CPING();
     ~_CPING();
-protected:
+
+  protected:
 #ifdef CPING_USE_ICMP
     HINSTANCE sm_hIcmp;
 #endif
@@ -140,7 +139,6 @@ _CPING::~_CPING()
 }
 
 static _CPING _cpingData;
-
 
 ///////////////////////////////// Implementation //////////////////////////////
 
@@ -199,12 +197,12 @@ BOOL CPing::Initialise1() const
             TRACE(_T("Could not find ICMP functions in the ICMP DLL\n"));
     }
 
-    return (sm_pIcmpCreateFile != NULL && sm_pIcmpSendEcho != NULL &&	sm_pIcmpCloseHandle != NULL);
+    return (sm_pIcmpCreateFile != NULL && sm_pIcmpSendEcho != NULL && sm_pIcmpCloseHandle != NULL);
 }
 #endif //CPING_USE_ICMP
 
 #ifdef CPING_USE_WINSOCK2
-BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwTimeout, UCHAR nPacketSize) const
+BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply &pr, UCHAR /*nTTL*/, DWORD dwTimeout, UCHAR nPacketSize) const
 {
     //Parameter validation
     if (nPacketSize > MAX_ICMP_PACKET_SIZE || nPacketSize < MIN_ICMP_PACKET_SIZE)
@@ -223,16 +221,16 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
 
     //Resolve the address of the host to connect to
     sockaddr_in dest;
-    memset(&dest,0,sizeof(dest));
-    LPSTR lpszAscii = T2A((LPTSTR) pszHostName);
+    memset(&dest, 0, sizeof(dest));
+    LPSTR lpszAscii = T2A((LPTSTR)pszHostName);
     unsigned long addr = inet_addr(lpszAscii);
     if (addr == INADDR_NONE)
     {
         //Not a dotted address, then do a lookup of the name
-        hostent* hp = gethostbyname(lpszAscii);
+        hostent *hp = gethostbyname(lpszAscii);
         if (hp)
         {
-            memcpy(&(dest.sin_addr),hp->h_addr,hp->h_length);
+            memcpy(&(dest.sin_addr), hp->h_addr, hp->h_length);
             dest.sin_family = hp->h_addrtype;
         }
         else
@@ -249,7 +247,7 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
 
     //Create the raw socket
     SOCKET sockRaw = WSASocket(AF_INET, SOCK_RAW, IPPROTO_ICMP, NULL, 0, 0);
-    if (sockRaw == INVALID_SOCKET) 
+    if (sockRaw == INVALID_SOCKET)
     {
         TRACE(_T("CPing::Ping2, Failed to create a raw socket\n"));
         return FALSE;
@@ -257,8 +255,8 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
 
     //Allocate the ICMP packet
     int nBufSize = nPacketSize + sizeof(ICMP_HEADER);
-    char* pICMP = new char[nBufSize];
-    FillIcmpData((LPICMP_HEADER) pICMP, nBufSize);
+    char *pICMP = new char[nBufSize];
+    FillIcmpData((LPICMP_HEADER)pICMP, nBufSize);
 
     //Get the tick count prior to sending the packet
     LARGE_INTEGER TimerTick;
@@ -266,12 +264,12 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
     __int64 nStartTick = TimerTick.QuadPart;
 
     //Send of the packet
-    int nWrote = sendto(sockRaw, pICMP, nBufSize, 0, (sockaddr*)&dest, sizeof(dest));
+    int nWrote = sendto(sockRaw, pICMP, nBufSize, 0, (sockaddr *)&dest, sizeof(dest));
     if (nWrote == SOCKET_ERROR)
     {
         TRACE(_T("CPing::Ping2, sendto failed\n"));
 
-        delete [] pICMP;
+        delete[] pICMP;
 
         DWORD dwError = GetLastError();
         closesocket(sockRaw);
@@ -281,7 +279,7 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
     }
 
     //allocate the recv buffer
-    char* pRecvBuf = new char[MAX_ICMP_PACKET_SIZE];
+    char *pRecvBuf = new char[MAX_ICMP_PACKET_SIZE];
     BOOL bReadable;
     sockaddr_in from;
     int nFromlen = sizeof(from);
@@ -293,15 +291,15 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
         if (bReadable)
         {
             //Receive the response
-            nRead = recvfrom(sockRaw, pRecvBuf, MAX_ICMP_PACKET_SIZE, 0, (sockaddr*)&from, &nFromlen);
+            nRead = recvfrom(sockRaw, pRecvBuf, MAX_ICMP_PACKET_SIZE, 0, (sockaddr *)&from, &nFromlen);
         }
         else
         {
             TRACE(_T("CPing::Ping2, timeout occured while awaiting recvfrom\n"));
             closesocket(sockRaw);
 
-            delete [] pICMP;
-            delete [] pRecvBuf;
+            delete[] pICMP;
+            delete[] pRecvBuf;
 
             //set the error to timed out
             SetLastError(WSAETIMEDOUT);
@@ -313,8 +311,8 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
     {
         TRACE(_T("CPing::Ping2, IsReadible call failed\n"));
 
-        delete [] pICMP;
-        delete [] pRecvBuf;
+        delete[] pICMP;
+        delete[] pRecvBuf;
 
         DWORD dwError = GetLastError();
         closesocket(sockRaw);
@@ -331,8 +329,8 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
     {
         TRACE(_T("CPing::Ping2, recvfrom call failed\n"));
 
-        delete [] pICMP;
-        delete [] pRecvBuf;
+        delete[] pICMP;
+        delete[] pRecvBuf;
 
         DWORD dwError = GetLastError();
         closesocket(sockRaw);
@@ -349,24 +347,24 @@ BOOL CPing::Ping2(LPCTSTR pszHostName, CPingReply& pr, UCHAR /*nTTL*/, DWORD dwT
     if (bSuccess)
     {
         pr.Address = from.sin_addr;
-        pr.RTT = (ULONG) ((TimerTick.QuadPart - nStartTick) * 1000 / sm_TimerFrequency);
+        pr.RTT = (ULONG)((TimerTick.QuadPart - nStartTick) * 1000 / sm_TimerFrequency);
     }
 
     //Don't forget to release out socket
     closesocket(sockRaw);
 
     //Free up the memory we allocated
-    delete [] pICMP;
-    delete [] pRecvBuf;
+    delete[] pICMP;
+    delete[] pRecvBuf;
 
     //return the status
     return bSuccess;
 }
 #endif //CPING_USE_WINSOCK2
 
-BOOL CPing::IsSocketReadible(SOCKET socket, DWORD dwTimeout, BOOL& bReadible)
+BOOL CPing::IsSocketReadible(SOCKET socket, DWORD dwTimeout, BOOL &bReadible)
 {
-    timeval timeout = { dwTimeout / 1000, dwTimeout % 1000 };
+    timeval timeout = {dwTimeout / 1000, dwTimeout % 1000};
     fd_set fds;
     FD_ZERO(&fds);
     FD_SET(socket, &fds);
@@ -383,7 +381,7 @@ BOOL CPing::IsSocketReadible(SOCKET socket, DWORD dwTimeout, BOOL& bReadible)
 }
 
 #ifdef CPING_USE_ICMP
-BOOL CPing::Ping1(LPCTSTR pszHostName, CPingReply& pr, UCHAR nTTL, DWORD dwTimeout, UCHAR nPacketSize) const
+BOOL CPing::Ping1(LPCTSTR pszHostName, CPingReply &pr, UCHAR nTTL, DWORD dwTimeout, UCHAR nPacketSize) const
 {
     //For correct operation of the T2A macro, see TN059
     USES_CONVERSION;
@@ -396,11 +394,11 @@ BOOL CPing::Ping1(LPCTSTR pszHostName, CPingReply& pr, UCHAR nTTL, DWORD dwTimeo
 
     LPSTR lpszAscii = T2A((LPTSTR)pszHostName);
     //Convert from dotted notation if required
-    unsigned long	addr = inet_addr(lpszAscii);
+    unsigned long addr = inet_addr(lpszAscii);
     if (addr == INADDR_NONE)
     {
         //Not a dotted address, then do a lookup of the name
-        hostent* hp = gethostbyname(lpszAscii);
+        hostent *hp = gethostbyname(lpszAscii);
         if (hp)
             memcpy(&addr, hp->h_addr, hp->h_length);
         else
@@ -424,13 +422,13 @@ BOOL CPing::Ping1(LPCTSTR pszHostName, CPingReply& pr, UCHAR nTTL, DWORD dwTimeo
     OptionInfo.Ttl = nTTL;
 
     //Set up the data which will be sent
-    unsigned char* pBuf = new unsigned char[nPacketSize];
+    unsigned char *pBuf = new unsigned char[nPacketSize];
     memset(pBuf, 'E', nPacketSize);
 
     //Do the actual Ping
     int nReplySize = sizeof(ICMP_ECHO_REPLY) + max(MIN_ICMP_PACKET_SIZE, nPacketSize);
-    unsigned char* pReply = new unsigned char[nReplySize];
-    ICMP_ECHO_REPLY* pEchoReply = (ICMP_ECHO_REPLY*)pReply;
+    unsigned char *pReply = new unsigned char[nReplySize];
+    ICMP_ECHO_REPLY *pEchoReply = (ICMP_ECHO_REPLY *)pReply;
     DWORD nRecvPackets = sm_pIcmpSendEcho(hIP, addr, pBuf, nPacketSize, &OptionInfo, pReply, nReplySize, dwTimeout);
 
     //Check we got the packet back
@@ -454,7 +452,7 @@ BOOL CPing::Ping1(LPCTSTR pszHostName, CPingReply& pr, UCHAR nTTL, DWORD dwTimeo
     //Check the data we got back is what was sent
     if (bSuccess)
     {
-        char* pReplyData = (char*)pEchoReply->Data;
+        char *pReplyData = (char *)pEchoReply->Data;
         for (int i = 0; i < nPacketSize && bSuccess; i++)
             bSuccess = (pReplyData[i] == 'E');
 
@@ -482,21 +480,19 @@ BOOL CPing::Ping1(LPCTSTR pszHostName, CPingReply& pr, UCHAR nTTL, DWORD dwTimeo
 }
 #endif //CPING_USE_ICMP
 
-
 #ifdef CPING_USE_WINSOCK2
 //Decode the raw Ip packet we get back
-BOOL DecodeResponse(char* pBuf, int nBytes, sockaddr_in* from) 
+BOOL DecodeResponse(char *pBuf, int nBytes, sockaddr_in *from)
 {
     //Get the current tick count
     LARGE_INTEGER TimerTick;
     VERIFY(QueryPerformanceCounter(&TimerTick));
 
-
-    LPIP_HEADER pIpHdr = (LPIP_HEADER) pBuf;
+    LPIP_HEADER pIpHdr = (LPIP_HEADER)pBuf;
     int nIpHdrlen = pIpHdr->h_len * 4; //Number of 32-bit words*4 = bytes
 
     //Not enough data recieved
-    if (nBytes < nIpHdrlen + MIN_ICMP_PACKET_SIZE) 
+    if (nBytes < nIpHdrlen + MIN_ICMP_PACKET_SIZE)
     {
         TRACE(_T("Received too few bytes from %s\n"), inet_ntoa(from->sin_addr));
         SetLastError(ERROR_UNEXP_NET_ERR);
@@ -504,7 +500,7 @@ BOOL DecodeResponse(char* pBuf, int nBytes, sockaddr_in* from)
     }
 
     //Check it is an ICMP_ECHOREPLY packet
-    LPICMP_HEADER pIcmpHdr = (LPICMP_HEADER) (pBuf + nIpHdrlen);
+    LPICMP_HEADER pIcmpHdr = (LPICMP_HEADER)(pBuf + nIpHdrlen);
     if (pIcmpHdr->i_type != 0) //type ICMP_ECHOREPLY is 0
     {
         TRACE(_T("non-echo type %d recvd\n"), pIcmpHdr->i_type);
@@ -513,7 +509,7 @@ BOOL DecodeResponse(char* pBuf, int nBytes, sockaddr_in* from)
     }
 
     //Check it is the same id as we sent
-    if (pIcmpHdr->i_id != (USHORT)GetCurrentProcessId()) 
+    if (pIcmpHdr->i_id != (USHORT)GetCurrentProcessId())
     {
         TRACE(_T("Received someone else's packet!\n"));
         SetLastError(ERROR_UNEXP_NET_ERR);
@@ -524,41 +520,40 @@ BOOL DecodeResponse(char* pBuf, int nBytes, sockaddr_in* from)
 }
 
 //generate an IP checksum based on a given data buffer
-USHORT GenerateIPChecksum(USHORT* pBuffer, int nSize) 
+USHORT GenerateIPChecksum(USHORT *pBuffer, int nSize)
 {
     unsigned long cksum = 0;
 
-    while (nSize > 1) 
+    while (nSize > 1)
     {
         cksum += *pBuffer++;
         nSize -= sizeof(USHORT);
     }
 
-    if (nSize) 
-        cksum += *(UCHAR*)pBuffer;
+    if (nSize)
+        cksum += *(UCHAR *)pBuffer;
 
     cksum = (cksum >> 16) + (cksum & 0xffff);
-    cksum += (cksum >>16);
+    cksum += (cksum >> 16);
     return (USHORT)(~cksum);
 }
 
 //Fill up the ICMP packet with defined values
 void FillIcmpData(LPICMP_HEADER pIcmp, int nData)
 {
-    pIcmp->i_type    = 8; //ICMP_ECHO type
-    pIcmp->i_code    = 0;
-    pIcmp->i_id      = (USHORT) GetCurrentProcessId();
-    pIcmp->i_seq     = 0;
-    pIcmp->i_cksum   = 0;
+    pIcmp->i_type = 8; //ICMP_ECHO type
+    pIcmp->i_code = 0;
+    pIcmp->i_id = (USHORT)GetCurrentProcessId();
+    pIcmp->i_seq = 0;
+    pIcmp->i_cksum = 0;
     pIcmp->timestamp = GetTickCount();
 
     //Set up the data which will be sent
     int nHdrSize = sizeof(ICMP_HEADER);
-    char* pData = (char*) (pIcmp + nHdrSize);
+    char *pData = (char *)(pIcmp + nHdrSize);
     memset(pData, 'E', nData - nHdrSize);
 
     //Generate the checksum
-    pIcmp->i_cksum = GenerateIPChecksum((USHORT*)pIcmp, nData);
+    pIcmp->i_cksum = GenerateIPChecksum((USHORT *)pIcmp, nData);
 }
 #endif //CPING_USE_WINSOCK2
-
