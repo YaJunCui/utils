@@ -27,7 +27,7 @@ All rights reserved.
 */
 
 /////////////////////////////////  Includes  //////////////////////////////////
-#include "stdafx.h"                     //Edit by cyj 2016-12-19
+#include "stdafx.h"                    
 #include "ping.h"
 
 /////////////////////////////////  Definitions ////////////////////////////////
