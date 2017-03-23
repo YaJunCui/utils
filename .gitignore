@@ -1,1 +1,12 @@
-*.vscode
+# 忽略的文件夹
+ipch/
+.vscode/
+Debug/
+Release/
+
+# 忽略的文件
+*.sdf
+*.exe
+*.suo
+*.o
+*.out
