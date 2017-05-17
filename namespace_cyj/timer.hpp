@@ -22,7 +22,7 @@ public:
     m_begin = std::chrono::high_resolution_clock::now();
   }
 
-  template <typename Duration = milliseconds>                                   //默认输出毫秒
+  template <typename Duration = std::chrono::milliseconds>                                   //默认输出毫秒
   int64_t elapsed() const
   {
     return std::chrono::duration_cast<Duration>(std::chrono::high_resolution_clock::now() - m_begin).count();
